@@ -1,4 +1,5 @@
 Particle[] particle;//your code here
+double shiftX, shiftY;
 void setup()
 {
 	size(720,720);//your code here
@@ -13,12 +14,17 @@ void setup()
 }
 void draw()
 {
-	background(205);
+	shiftX = (360 - mouseX)/60;
+	shiftY = (360 - mouseY)/60;
+	background(50);
 	for(int i = 0; i < particle.length; i++)
 	{
 			particle[i].move();
 			particle[i].show();//your code here
 	}
+	fill(205);
+	rect(150,200,15,320);
+	rect(570,200,15,320);
 }
 class NormalParticle implements Particle
 {
@@ -41,14 +47,16 @@ class NormalParticle implements Particle
 	}
 	public void move()
 	{
-		myX = myX + Math.cos(myTheta)*mySpeed;
-		myY = myY + Math.sin(myTheta)*mySpeed;
+		myX = myX + Math.cos(myTheta)*mySpeed + shiftX;
+		myY = myY + Math.sin(myTheta)*mySpeed + shiftY;
+		mySize = mySize + .05;
 		if (myX >= 720 || myX <= 0)
 		{
 			myX = 360;
 			myY = 360;
 			myTheta = Math.random()*6.28;
 			mySpeed = Math.random()*24-12;
+			mySize = Math.random()*15;
 		}
 		else if (myY >= 720 || myY <= 0)
 		{
@@ -56,6 +64,7 @@ class NormalParticle implements Particle
 			myY = 360;
 			myTheta = Math.random()*6.28;
 			mySpeed = Math.random()*24-12;
+			mySize = 0;
 		}
 	}
 	public void show()
