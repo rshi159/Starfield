@@ -1,19 +1,31 @@
 Particle[] particle;//your code here
 double shiftX, shiftY;
+int numParticlesX = 0;
+int numParticlesY = 0;
 void setup()
 {
 	size(720,720);//your code here
-	particle = new Particle[100];
-	for(int i = 0; i < particle.length; i++)
+	particle = new Particle[120];
+	for(int i = 0; i < 100; i++)
 	{
 		int myRandom = (int)Math.random()*30;
 		particle[i] = new NormalParticle();
 		particle[0] = new OddballParticle();
 		particle[1] = new JumboParticle();
 	}
+	for(int j = 100; j < 110 - numParticlesX; j++)
+	{
+		particle[j] = new SideParticleX();
+	}
+		for(int k = 110; k < 120 - numParticlesY; k++)
+	{
+		particle[k] = new SideParticleY();
+	}
 }
 void draw()
 {
+	numParticlesY = (int)Math.abs(mouseY-360)/36;
+	numParticlesX = (int)Math.abs(mouseX-360)/36;
 	shiftX = (360 - mouseX)/60;
 	shiftY = (360 - mouseY)/60;
 	background(50);
@@ -137,5 +149,149 @@ class JumboParticle extends NormalParticle//uses inheritance
 	{
 		ellipse((float)myX, (float)myY, 50,50);
 	}//your code here
+}
+//=================================================================
+class SideParticleX implements Particle
+{
+	double myX, myY, mySpeed, myTheta;
+	int myColorR, myColorG, myColorB;
+	SideParticleX()
+	{
+		myX = Math.random()*720;
+		if(mouseX > 360)
+		{
+			myY = 0;
+		}
+		else if (mouseX <= 360)
+		{
+			myY = 720;
+		}
+		mySpeed = Math.random()*15;
+		myTheta = (Math.random()-Math.random())*6.28;
+		myColorR = (int)(Math.random()*255);
+		myColorG = (int)(Math.random()*255);
+		myColorB = (int)(Math.random()*255);
+	}
+	public void move()
+	{
+		if (myTheta > 0)
+			myTheta = myTheta + .15;
+		else if (myTheta <=0)
+			myTheta = myTheta - .15;
+		mySpeed = mySpeed + .5;
+		myX = myX + Math.cos(myTheta)*mySpeed;
+		myY = myY + Math.sin(myTheta)*mySpeed;
+		if (myX < 0 || myX >720)
+		{
+			myX = Math.random()*720;
+			if(mouseX > 360)
+			{
+				myY = 0;
+			}
+			else if (mouseX <= 360)
+			{
+				myY = 720;
+			}
+			mySpeed = Math.random()*100;
+			myTheta = (Math.random()-Math.random())*6.28;
+			myColorR = (int)(Math.random()*255);
+			myColorG = (int)(Math.random()*255);
+			myColorB = (int)(Math.random()*255);
+		}
+		else if(myY < 0 || myY > 720)
+		{
+			myX = Math.random()*720;
+			if(mouseX > 360)
+			{
+				myY = 0;
+			}
+			else if (mouseX <= 360)
+			{
+				myY = 720;
+			}
+			mySpeed = Math.random()*100;
+			myTheta = (Math.random()-Math.random())*6.28;
+			myColorR = (int)(Math.random()*255);
+			myColorG = (int)(Math.random()*255);
+			myColorB = (int)(Math.random()*255);
+		}
+	}
+	public void show()
+	{
+		fill(myColorR,myColorG,myColorB);
+		ellipse((float)myX,(float)myY,25,25);
+	}
+}
+
+class SideParticleY implements Particle
+{
+	double myX, myY, mySpeed, myTheta;
+	int myColorR, myColorG, myColorB;
+	SideParticleY()
+	{
+		myX = Math.random()*720;
+		if(mouseY > 360)
+		{
+			myX = 0;
+		}
+		else if (mouseY <= 360)
+		{
+			myX = 720;
+		}
+		mySpeed = Math.random()*15;
+		myTheta = (Math.random()-Math.random())*6.28;
+		myColorR = (int)(Math.random()*255);
+		myColorG = (int)(Math.random()*255);
+		myColorB = (int)(Math.random()*255);
+	}
+	public void move()
+	{
+		if (myTheta > 0)
+			myTheta = myTheta + .15;
+		else if (myTheta <=0)
+			myTheta = myTheta - .15;
+		mySpeed = mySpeed + .5;
+		myX = myX + Math.cos(myTheta)*mySpeed;
+		myY = myY + Math.sin(myTheta)*mySpeed;
+		if (myX < 0 || myX >720)
+		{
+			myX = Math.random()*720;
+			if(mouseY > 360)
+			{
+				myX = 0;
+			}
+			else if (mouseY <= 360)
+			{
+				myX = 720;
+			}
+			mySpeed = Math.random()*100;
+			myTheta = (Math.random()-Math.random())*6.28;
+			myColorR = (int)(Math.random()*255);
+			myColorG = (int)(Math.random()*255);
+			myColorB = (int)(Math.random()*255);
+		}
+		else if(myY < 0 || myY > 720)
+		{
+			myX = Math.random()*720;
+			if(mouseY > 360)
+			{
+				myX = 0;
+			}
+			else if (mouseY <= 360)
+			{
+				myX = 720;
+			}
+			mySpeed = Math.random()*100;
+			myTheta = (Math.random()-Math.random())*6.28;
+			myColorR = (int)(Math.random()*255);
+			myColorG = (int)(Math.random()*255);
+			myColorB = (int)(Math.random()*255);
+		}
+	}
+	public void show()
+	{
+		fill(myColorR,myColorG,myColorB);
+		ellipse((float)myX,(float)myY,25,25);
+	}
 }
 
