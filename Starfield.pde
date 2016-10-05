@@ -1,4 +1,5 @@
 Particle[] particle;//your code here
+laser[] shoot;
 double shiftX, shiftY, shiftSideX, shiftSideY;
 int numParticlesX = 0;
 int numParticlesY = 0;
@@ -17,9 +18,14 @@ void setup()
 	{
 		particle[j] = new SideParticleX();
 	}
-		for(int k = 100; k < 120 - numParticlesY; k++)
+	for(int k = 100; k < 120 - numParticlesY; k++)
 	{
 		particle[k] = new SideParticleY();
+	}
+	shoot = new laser[50];
+	for(int l = 0; l < 50; l++)
+	{
+		shoot[l] = new laser();
 	}
 }
 void draw()
@@ -37,6 +43,14 @@ void draw()
 			particle[i].show();//your code here
 	}
 	fill(205);
+	if(mousePressed == true)
+	{
+		for(int l = 0; l < shoot.length; l++)
+		{
+			shoot[l].show();
+			shoot[l].move();
+		}
+	}
 	rect(150,200,15,320);
 	rect(570,200,15,320);
 }
@@ -47,8 +61,8 @@ class NormalParticle implements Particle
 	NormalParticle()
 	{
 		mySize = Math.random()*15;
-		myX = (Math.random()*60-30)+360;
-		myY = (Math.random()*60-30)+360;
+		myX = 360+(360-mouseX)/10+Math.random()*25-50;
+		myY = 360+(360-mouseY)/10+Math.random()*25-50;
 		myTheta = Math.random()*6.28;
 		mySpeed = Math.random()*24-12;
 			if (mySpeed < 4 && mySpeed> 0)
@@ -66,16 +80,16 @@ class NormalParticle implements Particle
 		mySize = mySize + .05;
 		if (myX >= 720 || myX <= 0)
 		{
-			myX = (Math.random()*60-30)+360;
-			myY = (Math.random()*60-30)+360;
+			myX = 360+(360-mouseX)/10+Math.random()*25-50;
+			myY = 360+(360-mouseY)/10+Math.random()*25-50;
 			myTheta = Math.random()*6.28;
 			mySpeed = Math.random()*24-12;
 			mySize = Math.random()*15;
 		}
 		else if (myY >= 720 || myY <= 0)
 		{
-			myX = (Math.random()*60-30)+360;
-			myY = (Math.random()*60-30)+360;
+			myX = 360+(360-mouseX)/10+Math.random()*25-50;
+			myY = 360+(360-mouseY)/10+Math.random()*25-50;
 			myTheta = Math.random()*6.28;
 			mySpeed = Math.random()*24-12;
 			mySize = Math.random()*15;
@@ -100,8 +114,8 @@ class OddballParticle implements Particle//uses an interface
 	int myColorR, myColorG, myColorB;
 	OddballParticle()
 	{
-		myX = 360;
-		myY = 360;
+		myX = 360+(360-mouseX)/10+Math.random()*25-50;
+		myY = 360+(360-mouseY)/10+Math.random()*25-50;
 		mySpeed = Math.random()*15;
 		myTheta = (Math.random()-Math.random())*6.28;
 		myColorR = (int)(Math.random()*255);
@@ -119,8 +133,8 @@ class OddballParticle implements Particle//uses an interface
 		myY = myY + Math.sin(myTheta)*mySpeed;
 		if (myX < 0 || myX >720)
 		{
-			myX = 360;
-			myY = 360;
+			myX = 360+(360-mouseX)/10+Math.random()*25-50;
+			myY = 360+(360-mouseY)/10+Math.random()*25-50;
 			mySpeed = Math.random()*100;
 			myTheta = (Math.random()-Math.random())*6.28;
 			myColorR = (int)(Math.random()*255);
@@ -129,8 +143,8 @@ class OddballParticle implements Particle//uses an interface
 		}
 		else if(myY < 0 || myY > 720)
 		{
-			myX = 360;
-			myY = 360;
+			myX = 360+(360-mouseX)/10+Math.random()*25-50;
+			myY = 360+(360-mouseY)/10+Math.random()*25-50;
 			mySpeed = Math.random()*100;
 			myTheta = (Math.random()-Math.random())*6.28;
 			myColorR = (int)(Math.random()*255);
@@ -259,5 +273,35 @@ class SideParticleY implements Particle
 	}
 }
 
-
-
+class laser
+{
+	double myX, myY, mySpeed, mySize;
+	laser()
+	{
+		mySize = 25;
+		myX = 360;
+		myY = 360;
+		mySpeed = 10;
+	}
+	void move()
+	{
+		if(mousePressed == true)
+		{
+			myX = myX + shiftX;
+			myY = myY + shiftY-Math.random()*50;
+			mySize = mySize - 3;
+		}
+		else if(mousePressed == false)
+		{
+			mySize = 25;
+			myX = 360;
+			myY = 360;
+			mySpeed = 10;
+		}
+	}
+	void show()
+	{
+		fill(0,0,160);
+		ellipse((float)myX,(float)myY,(float)mySize,(float)mySize); 
+	}
+}
