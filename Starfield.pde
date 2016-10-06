@@ -1,39 +1,36 @@
 Particle[] particle;//your code here
-laser[] shoot;
 double shiftX, shiftY, shiftSideX, shiftSideY;
 int numParticlesX = 0;
 int numParticlesY = 0;
 void setup()
 {
 	size(720,720);//your code here
-	particle = new Particle[120];
-	for(int i = 0; i < 80; i++)
+	particle = new Particle[300];
+	for(int i = 220; i < 300; i++)
 	{
 		int myRandom = (int)Math.random()*30;
 		particle[i] = new NormalParticle();
-		particle[0] = new OddballParticle();
-		particle[1] = new JumboParticle();
+		particle[220] = new OddballParticle();
+		particle[221] = new OddballParticle();
+		particle[222] = new OddballParticle();
+		particle[223] = new OddballParticle();
+		particle[224] = new JumboParticle();
 	}
-	for(int j = 80; j < 100 - numParticlesX; j++)
+	for(int j = 0; j < 110 - numParticlesX; j++)
 	{
 		particle[j] = new SideParticleX();
 	}
-	for(int k = 100; k < 120 - numParticlesY; k++)
+	for(int k = 110; k < 220 - numParticlesY; k++)
 	{
 		particle[k] = new SideParticleY();
-	}
-	shoot = new laser[50];
-	for(int l = 0; l < 50; l++)
-	{
-		shoot[l] = new laser();
 	}
 }
 void draw()
 {
 	numParticlesY = (int)Math.abs(mouseY-360)/36;
 	numParticlesX = (int)Math.abs(mouseX-360)/36;
-	shiftX = (360 - mouseX)/30;
-	shiftY = (360 - mouseY)/30;
+	shiftX = (360 - mouseX)/45;
+	shiftY = (360 - mouseY)/45;
 	shiftSideX = (360 - mouseX)/120;
 	shiftSideY = (360 - mouseY)/120;
 	background(50);
@@ -43,16 +40,11 @@ void draw()
 			particle[i].show();//your code here
 	}
 	fill(205);
-	if(mousePressed == true)
-	{
-		for(int l = 0; l < shoot.length; l++)
-		{
-			shoot[l].show();
-			shoot[l].move();
-		}
-	}
 	rect(150,200,15,320);
 	rect(570,200,15,320);
+	//quad(0,0,)
+	text("x="+(int)mouseX,15,15);
+	text("y="+(int)mouseY,15,25);
 }
 class NormalParticle implements Particle
 {
@@ -75,8 +67,8 @@ class NormalParticle implements Particle
 	}
 	public void move()
 	{
-		myX = myX + Math.cos(myTheta)*mySpeed + shiftX;
-		myY = myY + Math.sin(myTheta)*mySpeed + shiftY;
+		myX = myX + Math.cos(myTheta)*mySpeed + shiftX/(Math.random()+1.1);
+		myY = myY + Math.sin(myTheta)*mySpeed + shiftY/(Math.random()+1.1);
 		mySize = mySize + .05;
 		if (myX >= 720 || myX <= 0)
 		{
@@ -163,16 +155,17 @@ class JumboParticle extends NormalParticle//uses inheritance
 {
 	void show()
 	{
-		ellipse((float)myX, (float)myY, 50,50);
+		ellipse((float)myX, (float)myY, 75,75);
 	}//your code here
 }
 //=================================================================
 class SideParticleX implements Particle
 {
-	double myX, myY, mySpeed, myTheta, mySize;
+	double myX, myY, mySpeed, myTheta, mySize, myOpacity;
 	int myColorR, myColorG, myColorB;
 	SideParticleX()
 	{
+		myOpacity = Math.random()*80;
 		mySize = Math.random()*5;
 		myY= Math.random()*720;
 		if(mouseX >= 360)
@@ -180,16 +173,17 @@ class SideParticleX implements Particle
 		else if(mouseX < 360)
 			myX = 0;
 		myTheta = Math.random()*6.28;
-		mySpeed = Math.random()*12-6;
+		mySpeed = Math.random()*10-5;
 		myColorR = (int)(Math.random()*255);
 		myColorG = (int)(Math.random()*255);
 		myColorB = (int)(Math.random()*255);
 	}
 	public void move()
 	{
-		myX = myX + Math.cos(myTheta)*mySpeed + shiftSideX;
-		myY = myY + Math.sin(myTheta)*mySpeed + shiftSideY;
-		mySize = mySize + .02;
+		myX = myX + Math.cos(myTheta)*mySpeed + shiftSideX/(Math.random()*2+1.8);
+		myY = myY + Math.sin(myTheta)*mySpeed + shiftSideY/(Math.random()*2+1.8);
+		mySize = mySize + .002;
+		myOpacity = myOpacity + .02;
 		if (myX >= 720 || myX <= 0)
 		{
 			myY= Math.random()*720;
@@ -198,7 +192,7 @@ class SideParticleX implements Particle
 			else if(mouseX < 360)
 			myX = 0;
 			myTheta = Math.random()*6.28;
-			mySpeed = Math.random()*24-12;
+			mySpeed = Math.random()*2-1;
 			mySize = Math.random()*5;
 		}
 		else if (myY >= 720 || myY <= 0)
@@ -209,23 +203,24 @@ class SideParticleX implements Particle
 			else if(mouseX < 360)
 			myX = 0;
 			myTheta = Math.random()*6.28;
-			mySpeed = Math.random()*24-12;
+			mySpeed = Math.random()*2-1;
 			mySize = Math.random()*5;
 		}
 	}
 	public void show()
 	{
-		fill(myColorR,myColorG,myColorB);
+		fill(myColorR,myColorG,myColorB,(int)myOpacity);
 		ellipse((float)myX, (float)myY, (float)mySize, (float)mySize);
 	}
 }
 
 class SideParticleY implements Particle
 {
-	double myX, myY, mySpeed, myTheta, mySize;
+	double myX, myY, mySpeed, myTheta, mySize, myOpacity;
 	int myColorR, myColorG, myColorB;
 	SideParticleY()
 	{
+		myOpacity = Math.random()*80;
 		mySize = Math.random()*5;
 		myX= Math.random()*720;
 		if(mouseY >= 360)
@@ -233,16 +228,17 @@ class SideParticleY implements Particle
 		else if(mouseY < 360)
 			myY = 0;
 		myTheta = Math.random()*6.28;
-		mySpeed = Math.random()*12-6;
+		mySpeed = Math.random()*10-5;
 		myColorR = (int)(Math.random()*255);
 		myColorG = (int)(Math.random()*255);
 		myColorB = (int)(Math.random()*255);
 	}
 	public void move()
 	{
-		myX = myX + Math.cos(myTheta)*mySpeed + shiftSideX;
-		myY = myY + Math.sin(myTheta)*mySpeed + shiftSideY;
-		mySize = mySize + .02;
+		myX = myX + Math.cos(myTheta)*mySpeed + shiftSideX/2;
+		myY = myY + Math.sin(myTheta)*mySpeed + shiftSideY/2;
+		mySize = mySize + .002;
+		myOpacity = myOpacity + .02;
 		if (myX >= 720 || myX <= 0)
 		{
 			myX= Math.random()*720;
@@ -251,7 +247,7 @@ class SideParticleY implements Particle
 			else if(mouseY < 360)
 			myY = 0;
 			myTheta = Math.random()*6.28;
-			mySpeed = Math.random()*24-12;
+			mySpeed = Math.random()*2-1;
 			mySize = Math.random()*5;
 		}
 		else if (myY >= 720 || myY <= 0)
@@ -262,46 +258,13 @@ class SideParticleY implements Particle
 			else if(mouseY < 360)
 			myY = 0;
 			myTheta = Math.random()*6.28;
-			mySpeed = Math.random()*24-12;
+			mySpeed = Math.random()*2-1;
 			mySize = Math.random()*5;
 		}
 	}
 	public void show()
 	{
-		fill(myColorR,myColorG,myColorB);
+		fill(myColorR,myColorG,myColorB,(int)myOpacity);
 		ellipse((float)myX, (float)myY, (float)mySize, (float)mySize);
-	}
-}
-
-class laser
-{
-	double myX, myY, mySpeed, mySize;
-	laser()
-	{
-		mySize = 25;
-		myX = 360;
-		myY = 360;
-		mySpeed = 10;
-	}
-	void move()
-	{
-		if(mousePressed == true)
-		{
-			myX = myX + shiftX;
-			myY = myY + shiftY-Math.random()*50;
-			mySize = mySize - 3;
-		}
-		else if(mousePressed == false)
-		{
-			mySize = 25;
-			myX = 360;
-			myY = 360;
-			mySpeed = 10;
-		}
-	}
-	void show()
-	{
-		fill(0,0,160);
-		ellipse((float)myX,(float)myY,(float)mySize,(float)mySize); 
 	}
 }
